@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
+
 public class Activity {
     @JsonProperty("objectType")
     private String objectType;
@@ -12,4 +13,7 @@ public class Activity {
     private String id;
     @JsonProperty("definition")
     private Object definition;
+
+    public Activity(String url, String s) {
+    }
 }

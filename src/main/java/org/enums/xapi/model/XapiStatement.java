@@ -3,6 +3,7 @@ package org.enums.xapi.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 @Setter
 @Getter
+@AllArgsConstructor
 public class XapiStatement {
     @JsonProperty("id")
     private UUID id;
@@ -31,6 +33,9 @@ public class XapiStatement {
     private final Map<String,Object> other = new HashMap<>();
 
     public XapiStatement() {}
+
+    public XapiStatement(String string, Actor actor, Verb verb, Activity activity, Instant now) {
+    }
 
     // getters / setters (omitted here for brevity — include standard getters and setters)
     // helper for timestamp string
