@@ -1,6 +1,5 @@
 package testing;
 
-
 import org.enums.xapi.model.Activity;
 import org.enums.xapi.model.Actor;
 import org.enums.xapi.model.Verb;
@@ -8,11 +7,11 @@ import org.enums.xapi.model.XapiStatement;
 import org.enums.xapi.validation.XapiValidator;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.time.Instant;
 import java.util.UUID;
-
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class XapiModelTest {
 
@@ -49,9 +48,10 @@ class XapiModelTest {
         // --- Validate ---
         XapiValidator validator = new XapiValidator();
 
-        // ✔ Assert that no exception is thrown
-        assertDoesNotThrow(() -> validator.validate(statement.getRaw()));
+        //  Assert that no exception is thrown
+        assertDoesNotThrow(() -> validator.validate(statement));
 
+        // Verify data
         assertEquals("answered", statement.getVerb().getDisplay());
         assertEquals("ade ope", statement.getActor().getName());
     }
