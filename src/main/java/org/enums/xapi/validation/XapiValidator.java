@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.enums.xapi.model.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +13,12 @@ import java.util.UUID;
 public class XapiValidator {
 
     private final ObjectMapper mapper = new ObjectMapper();
+
+
+    public XapiValidator() {
+
+    }
+
 
     @Getter
     public static class ValidationResult {
