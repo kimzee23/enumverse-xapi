@@ -1,17 +1,15 @@
 package org.enums.xapi.model;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 public class Actor {
     @JsonProperty("objectType")
     private String objectType; // Agent / Group
-
     @JsonProperty("mbox")
     private String mbox;
 
@@ -21,18 +19,22 @@ public class Actor {
     @JsonProperty("account")
     private Account account;
 
-    public Actor(String objectType, String johnDoe) {
+    public Actor() {}
+
+    public Actor(String mbox, String name) {
+        this.objectType = "Agent";
+        this.mbox = mbox;
+        this.name = name;
     }
 
     @AllArgsConstructor
-
-    @Setter
     @Getter
+    @Setter
     public static class Account {
         @JsonProperty("homePage")
         private String homePage;
+
         @JsonProperty("name")
         private String name;
-
     }
 }

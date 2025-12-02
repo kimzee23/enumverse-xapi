@@ -33,8 +33,8 @@ public class Verb {
      */
     public String getDisplay(String lang) {
         if (display == null) return null;
-        String v = (String) display.get(lang);
-        return v != null ? v : display.getFirstValue();
+        String verb = (String) display.get(lang);
+        return verb != null ? verb : display.getFirstValue();
     }
 
     /**

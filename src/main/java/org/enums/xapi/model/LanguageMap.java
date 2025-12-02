@@ -11,13 +11,12 @@ public class LanguageMap extends HashMap<String, Object> {
     }
 
     @JsonCreator
-    public LanguageMap(java.util.Map<String, String> m) {
-        super(m);
+    public LanguageMap(java.util.Map<String, String> maps) {
+        super(maps);
     }
-
     @JsonValue
-    public java.util.Map<String, String> toMap() {
-        return this.toMap();
+    public java.util.Map<String, Object> toMap() {
+        return this;
     }
 
     /**

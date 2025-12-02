@@ -1,4 +1,5 @@
 package org.enums.xapi.model;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,16 +24,13 @@ public class Activity {
         this.definition = new Definition(LanguageMap.of("en-US", name));
     }
 
-    /**
-     * Convenience to get the human-readable name (first-language fallback).
-     */
     public String getName() {
         if (definition == null || definition.getName() == null) return null;
         return definition.getName().getFirstValue();
     }
 
-    @Setter
     @Getter
+    @Setter
     public static class Definition {
         @JsonProperty("name")
         private LanguageMap name;
@@ -42,6 +40,5 @@ public class Activity {
         public Definition(LanguageMap name) {
             this.name = name;
         }
-
     }
 }

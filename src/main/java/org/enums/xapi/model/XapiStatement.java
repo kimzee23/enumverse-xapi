@@ -11,13 +11,12 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 @Getter
 public class XapiStatement {
 
-
     @JsonProperty("id")
     private UUID id;
-
 
     @JsonProperty("actor")
     private Actor actor;
@@ -37,31 +36,22 @@ public class XapiStatement {
     @JsonProperty("timestamp")
     private Instant timestamp;
 
-    // raw JSON preserved if needed
     @Setter
-    @Getter
     private JsonNode raw;
 
     private final Map<String, Object> other = new HashMap<>();
 
     public XapiStatement() {}
 
-    public XapiStatement(String id, Actor actor, Verb verb, Activity object, Instant timestamp) {
-        this.id = id != null && !id.isBlank() ? UUID.fromString(id) : UUID.randomUUID();
+    public XapiStatement(
+            String id, Actor actor, Verb verb,
+            Activity object, Instant timestamp
+    ) {
+        this.id = (id != null && !id.isBlank()) ?
+                UUID.fromString(id) : UUID.randomUUID();
         this.actor = actor;
         this.verb = verb;
         this.object = object;
-        this.timestamp = timestamp;
-    }
-
-
-    public XapiStatement(UUID id, Actor actor, Verb verb, Activity object, Result result, Context context, Instant timestamp) {
-        this.id = id != null ? id : UUID.randomUUID();
-        this.actor = actor;
-        this.verb = verb;
-        this.object = object;
-        this.result = result;
-        this.context = context;
         this.timestamp = timestamp;
     }
 
