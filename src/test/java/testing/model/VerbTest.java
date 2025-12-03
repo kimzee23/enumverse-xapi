@@ -8,26 +8,55 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VerbTest {
-    @DisplayName("constructor testing")
+
+    @DisplayName("Verb should store id and language map correctly")
     @Test
-    public void testVerbConstruct() {
-        Verb verb = new Verb("https://example.com/verb/completed", "completed");
-        assertEquals("https://example.com/verb/completed", verb.getId());
-        assertEquals("completed",verb.getDefaultDisplay());
+    void testVerbWithLanguageMap() {
+        LanguageMap map = LanguageMap.of("en-US", "answered");
+        Verb verb = new Verb("https://adlnet.gov/expapi/verbs/answered", map);
+
+        assertEquals("https://adlnet.gov/expapi/verbs/answered", verb.getId());
+        assertEquals("answered", verb.getDefaultDisplay());
     }
-    @DisplayName("Language fallback test")
+
+    @DisplayName("Verb convenience constructor should create LanguageMap automatically")
     @Test
-    public void testLanguageFallback() {
-        LanguageMap languageMap = LanguageMap.of("en-us","completed");
-        Verb verb = new Verb("X", languageMap);
-        assertEquals("completed", verb.getDisplay("en-us"));
-        assertEquals("completed", verb.getDisplay("fr-fr"));
+    void testVerbWithStringDisplay() {
+        Verb verb = new Verb("https://xapi.com/verbs/viewed", "Viewed");
+
+        assertEquals("https://xapi.com/verbs/viewed", verb.getId());
+        assertEquals("Viewed", verb.getDefaultDisplay());
     }
-    @DisplayName("InvalidIRI")
+
+    @DisplayName("Verb getDisplay(lang) should return correct language")
     @Test
-    public void testInvalidIRI() {
-        Verb verb = new Verb("this_not_a_url", LanguageMap.of("en-us","Done"));
-        assertEquals("this_not_a_url", verb.getId());
+    void testGetDisplayForSpecificLanguage() {
+        LanguageMap map = LanguageMap.of("en-US", "answered");
+        map.put("fr-FR", "répondu");
+
+        Verb verb = new Verb("https://example.com/answered", map);
+
+        assertEquals("répondu", verb.getDisplay("fr-FR"));
+        assertEquals("answered", verb.getDisplay("en-US"));
+    }
+
+    @DisplayName("Verb getDisplay(lang) should fallback to first available")
+    @Test
+    void testGetDisplayFallback() {
+        LanguageMap map = LanguageMap.of("en-GB", "completed");
+        Verb verb = new Verb("https://xapi.com/verbs/completed", map);
+
+        assertEquals("completed", verb.getDisplay("unknown-lang"));
+    }
+
+    @DisplayName("Verb should return the first available display value.")
+    @Test
+    void testGetDefaultDisplay() {
+        LanguageMap map = new LanguageMap();
+        map.put("es-ES", "respondido");
+
+        Verb verb = new Verb("id", map);
+
+        assertEquals("respondido", verb.getDefaultDisplay());
     }
 }
-
