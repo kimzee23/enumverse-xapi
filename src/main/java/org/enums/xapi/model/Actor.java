@@ -16,8 +16,6 @@ public class Actor {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("account")
-    private Account account;
 
     public Actor() {}
 
@@ -27,14 +25,4 @@ public class Actor {
         this.name = name;
     }
 
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class Account {
-        @JsonProperty("homePage")
-        private String homePage;
-
-        @JsonProperty("name")
-        private String name;
-    }
 }
