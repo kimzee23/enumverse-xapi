@@ -1,4 +1,5 @@
 package org.enums.xapi.model;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,22 +9,13 @@ import lombok.Setter;
 public class Result {
     @JsonProperty("score")
     private Score score;
+
     @JsonProperty("success")
     private Boolean success;
+
     @JsonProperty("completion")
     private Boolean completion;
+
     @JsonProperty("response")
     private String response;
-    @Getter
-    @Setter
-    public static class Score {
-        @JsonProperty("scaled")
-        private Double scaled;
-        @JsonProperty("raw")
-        private Double raw;
-        @JsonProperty("min")
-        private Double min;
-        @JsonProperty("max")
-        private Double max;
-    }
 }
