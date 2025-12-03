@@ -16,6 +16,8 @@ public class Actor {
     @JsonProperty("name")
     private String name;
 
+    @JsonProperty("account")
+    private Account account;
 
     public Actor() {}
 

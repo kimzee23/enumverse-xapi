@@ -35,11 +35,11 @@ class XapiValidatorTest {
         Verb verb = new Verb("x", "Test");
         Activity act = new Activity("122101", "Action");
 
-        XapiStatement st = new XapiStatement(null, null, verb, act, Instant.now());
+        XapiStatement xapiStatement = new XapiStatement(null, null, verb, act, Instant.now());
 
-        XapiValidator.ValidationResult result = validator.validate(st);
+        XapiValidator.ValidationResult result = validator.validate(xapiStatement);
         assertFalse(result.isValid());
-        assertTrue(result.getMessages().contains("missing actor"));
+        assertTrue(result.getMessages().contains("Missing actor"));
     }
 
     @Test
