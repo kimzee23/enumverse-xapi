@@ -5,28 +5,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.enums.xapi.model.*;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.function.Supplier;
 
 public class XapiValidator {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-
-    public XapiValidator() {
-
-    }
-
+    public XapiValidator() {}
 
     @Getter
     public static class ValidationResult {
         private final boolean valid;
         private final List<String> messages;
+
         public ValidationResult(boolean valid, List<String> messages) {
-            this.valid = valid; this.messages = messages;
+            this.valid = valid;
+            this.messages = messages;
         }
+    }
+
+    // Helper for lambda validations
+    private void require(Supplier<Boolean> rule, String message, List<String> errors) {
+        if (!rule.get()) errors.add(message);
     }
 
     public ValidationResult validate(JsonNode json) {
@@ -34,59 +36,123 @@ public class XapiValidator {
             XapiStatement st = mapper.treeToValue(json, XapiStatement.class);
             return validate(st);
         } catch (Exception e) {
-            List<String> m = new ArrayList<>();
-            m.add("invalid JSON mapping: " + e.getMessage());
-            return new ValidationResult(false, m);
+            return new ValidationResult(false,
+                    List.of("Invalid JSON mapping: " + e.getMessage()));
         }
+
     }
+
 
     public ValidationResult validate(XapiStatement st) {
         List<String> errors = new ArrayList<>();
-        if (st == null) {
-            errors.add("statement is null");
-            return new ValidationResult(false, errors);
-        }
-        // actor
-        if (st.getActor() == null) {
-            errors.add("missing actor");
-        } else {
-            Actor a = st.getActor();
-            boolean identified = (a.getMbox() != null && !a.getMbox().isBlank())
-                    || (a.getAccount() != null && a.getAccount().getName() != null && !a.getAccount().getName().isBlank());
-            if (!identified) errors.add("actor must have mbox or account.name");
-        }
-        // verb
-        if (st.getVerb() == null || st.getVerb().getId() == null || st.getVerb().getId().isBlank()) {
-            errors.add("missing verb.id");
-        } else {
-            // display language map must not be empty
-            LanguageMap lm = st.getVerb().getDisplay();
-            if (lm == null || lm.isEmpty()) {
-                errors.add("verb.display must have at least one language entry");
-            }
-            // optional: ensure id looks like IRI
-            String vid = st.getVerb().getId();
-            if (!looksLikeIri(vid)) errors.add("verb.id does not look like an IRI: " + vid);
-        }
-        // object
-        if (st.getObject() == null || st.getObject().getId() == null || st.getObject().getId().isBlank()) {
-            errors.add("missing object.id");
-        }
-        // timestamp check (optional)
-        if (st.getTimestamp() == null) {
-            // it's okay, LRS can assign timestamp; not an error
-        }
+        require(() -> st != null, "Statement is null", errors);
+        if (st == null) return new ValidationResult(false, errors);
+
+
+        validateActor(st.getActor(), errors);
+        validateAccount(st.getAccount(), errors);
+
+        validateActor(st.getActor(), errors);
+        validateVerb(st.getVerb(), errors);
+        validateObject(st.getObject(), errors);
+        validateResult(st.getResult(), errors);
+        validateAttachments(st.getAttachments(), errors);
 
         return new ValidationResult(errors.isEmpty(), errors);
     }
 
-    private boolean looksLikeIri(String s) {
-        return s != null && (s.startsWith("http://") || s.startsWith("https://") || s.contains(":"));
+    // Actor validation
+    private void validateActor(Actor actor, List<String> errors) {
+        require(() -> actor != null, "Missing actor", errors);
+        if (actor == null) return;
+
+        boolean hasMbox = notEmpty(actor.getMbox());
+
+        boolean identified = hasMbox;
+
+        require(() -> identified, "Actor must have at least one identifier: mbox", errors);
+    }
+    //Validate account
+    private void validateAccount(Account account, List<String> errors) {
+        if (account == null) return;
+
+        if (!notEmpty(account.getName())) {
+            errors.add("Account must have a name");
+        }
+
+        if (!notEmpty(account.getHomePage())) {
+            errors.add("Account must have a homePage");
+        }
     }
 
-    /** Strict variant: throw if invalid */
+    // Verb validation
+
+    private void validateVerb(Verb verb, List<String> errors) {
+        require(() -> verb != null && notEmpty(verb.getId()), "Missing verb.id", errors);
+        if (verb == null) return;
+
+        require(() -> looksLikeIri(verb.getId()), "verb.id is not a valid IRI: " + verb.getId(), errors);
+        require(() -> verb.getDisplay() != null && !verb.getDisplay().isEmpty(),
+                "verb.display must include at least one language entry", errors);
+    }
+
+    // Object / Activity
+
+    private void validateObject(Activity obj, List<String> errors) {
+        require(() -> obj != null, "Missing object", errors);
+        if (obj == null) return;
+
+        require(() -> notEmpty(obj.getId()), "Missing object.id", errors);
+
+        if (obj.getDefinition() != null) {
+            LanguageMap name = obj.getDefinition().getName();
+            require(() -> name == null || !name.isEmpty(),
+                    "object.definition.name must not be empty when present", errors);
+        }
+    }
+
+    // Result validation
+    private void validateResult(Result result, List<String> errors) {
+        if (result == null) return;
+
+        Score score = result.getScore();
+        if (score != null) {
+            require(() -> score.getScaled() == null || (score.getScaled() >= -1.0 && score.getScaled() <= 1.0),
+                    "result.score.scaled must be between -1.0 and 1.0", errors);
+
+            require(() -> score.getMin() == null || score.getMax() == null || score.getMin() <= score.getMax(),
+                    "result.score.min cannot be greater than result.score.max", errors);
+        }
+    }
+
+    // Attachments validation
+    private void validateAttachments(List<Attachment> list, List<String> errors) {
+        if (list == null) return;
+
+        for (int count = 0; count < list.size(); count++) {
+            Attachment att = list.get(count);
+            String prefix = "attachment[" + count + "] ";
+
+            require(() -> notEmpty(att.getUsageType()), prefix + "missing usageType", errors);
+            require(() -> att.getDisplay() != null && !att.getDisplay().isEmpty(),
+                    prefix + "missing display (LanguageMap)", errors);
+            require(() -> notEmpty(att.getContentType()), prefix + "missing contentType", errors);
+            require(() -> att.getLength() != null && att.getLength() >= 0, prefix + "invalid length", errors);
+            require(() -> notEmpty(att.getSha2()) || notEmpty(att.getFileUrl()), prefix + "must have either sha2 or fileUrl", errors);
+        }
+    }
+
+    // Helpers
+    private boolean notEmpty(String string) {
+        return string != null && !string.isBlank();
+    }
+
+    private boolean looksLikeIri(String string) {
+        return string != null && (string.startsWith("http://") || string.startsWith("https://") || string.contains(":"));
+    }
+
     public void validateOrThrow(XapiStatement st) {
-        ValidationResult vr = validate(st);
-        if (!vr.isValid()) throw new IllegalArgumentException(String.join("; ", vr.getMessages()));
+        ValidationResult validationResult = validate(st);
+        if (!validationResult.isValid()) throw new IllegalArgumentException(String.join("; ", validationResult.getMessages()));
     }
 }

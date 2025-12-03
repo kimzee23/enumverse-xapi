@@ -15,6 +15,7 @@ public class Account {
 
     public Account() {}
 
+
     public Account(String homePage, String name) {
         this.homePage = homePage;
         this.name = name;

@@ -8,9 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 public class XapiStatement {
@@ -20,6 +18,9 @@ public class XapiStatement {
 
     @JsonProperty("actor")
     private Actor actor;
+
+    @JsonProperty("account")
+    private Account account;
 
     @JsonProperty("verb")
     private Verb verb;
@@ -36,6 +37,9 @@ public class XapiStatement {
     @JsonProperty("timestamp")
     private Instant timestamp;
 
+    @JsonProperty("attachments")
+    private List<Attachment> attachments = new ArrayList<>();
+
     @Setter
     private JsonNode raw;
 
@@ -43,16 +47,18 @@ public class XapiStatement {
 
     public XapiStatement() {}
 
-    public XapiStatement(
-            String id, Actor actor, Verb verb,
-            Activity object, Instant timestamp
-    ) {
+    public XapiStatement(String id, Actor actor, Verb verb,
+                         Activity object, Instant timestamp) {
         this.id = (id != null && !id.isBlank()) ?
                 UUID.fromString(id) : UUID.randomUUID();
         this.actor = actor;
         this.verb = verb;
         this.object = object;
         this.timestamp = timestamp;
+    }
+
+    public void addAttachment(Attachment attachment) {
+        this.attachments.add(attachment);
     }
 
     @JsonAnySetter
