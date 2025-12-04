@@ -57,6 +57,9 @@ public class XapiStatement {
         this.timestamp = timestamp;
     }
 
+    public XapiStatement(String string, Actor actor, Verb did, Activity activity, Instant now, Context ctx) {
+    }
+
     public void addAttachment(Attachment attachment) {
         this.attachments.add(attachment);
     }

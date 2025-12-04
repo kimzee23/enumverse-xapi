@@ -186,22 +186,22 @@ public class XapiValidator {
     private void validateActivityList(List<Activity> list, String field, List<String> errors) {
         if (list == null) return;
 
-        for (int i = 0; i < list.size(); i++) {
-            Activity a = list.get(i);
+        for (int count = 0; count < list.size(); count++) {
+            Activity a = list.get(count);
 
             if (a == null) {
-                errors.add(field + "[" + i + "] cannot be null");
+                errors.add(field + "[" + count + "] cannot be null");
                 continue;
             }
 
             if (!notEmpty(a.getId())) {
-                errors.add(field + "[" + i + "].id is missing");
+                errors.add(field + "[" + count + "].id is missing");
             }
 
             if (a.getDefinition() != null) {
                 LanguageMap name = a.getDefinition().getName();
                 if (name != null && name.isEmpty())
-                    errors.add(field + "[" + i + "].definition.name cannot be empty");
+                    errors.add(field + "[" + count + "].definition.name cannot be empty");
             }
         }
     }
