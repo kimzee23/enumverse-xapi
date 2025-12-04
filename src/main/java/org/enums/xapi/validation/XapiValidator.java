@@ -26,7 +26,6 @@ public class XapiValidator {
         }
     }
 
-    // Helper for lambda validations
     private void require(Supplier<Boolean> rule, String message, List<String> errors) {
         if (!rule.get()) errors.add(message);
     }
@@ -39,54 +38,48 @@ public class XapiValidator {
             return new ValidationResult(false,
                     List.of("Invalid JSON mapping: " + e.getMessage()));
         }
-
     }
-
 
     public ValidationResult validate(XapiStatement st) {
         List<String> errors = new ArrayList<>();
         require(() -> st != null, "Statement is null", errors);
         if (st == null) return new ValidationResult(false, errors);
 
-
         validateActor(st.getActor(), errors);
         validateAccount(st.getAccount(), errors);
-
-        validateActor(st.getActor(), errors);
         validateVerb(st.getVerb(), errors);
         validateObject(st.getObject(), errors);
         validateResult(st.getResult(), errors);
         validateAttachments(st.getAttachments(), errors);
 
+        // *** FIXED: context validation now triggered ***
+        validateContext(st.getContext(), errors);
+
         return new ValidationResult(errors.isEmpty(), errors);
     }
 
-    // Actor validation
+    // Actor
     private void validateActor(Actor actor, List<String> errors) {
         require(() -> actor != null, "Missing actor", errors);
         if (actor == null) return;
 
         boolean hasMbox = notEmpty(actor.getMbox());
-
         boolean identified = hasMbox;
 
         require(() -> identified, "Actor must have at least one identifier: mbox", errors);
     }
-    //Validate account
+
+    // Account
     private void validateAccount(Account account, List<String> errors) {
         if (account == null) return;
 
-        if (!notEmpty(account.getName())) {
+        if (!notEmpty(account.getName()))
             errors.add("Account must have a name");
-        }
 
-        if (!notEmpty(account.getHomePage())) {
+        if (!notEmpty(account.getHomePage()))
             errors.add("Account must have a homePage");
-        }
     }
-
-    // Verb validation
-
+    // Verb
     private void validateVerb(Verb verb, List<String> errors) {
         require(() -> verb != null && notEmpty(verb.getId()), "Missing verb.id", errors);
         if (verb == null) return;
@@ -97,7 +90,6 @@ public class XapiValidator {
     }
 
     // Object / Activity
-
     private void validateObject(Activity obj, List<String> errors) {
         require(() -> obj != null, "Missing object", errors);
         if (obj == null) return;
@@ -111,7 +103,7 @@ public class XapiValidator {
         }
     }
 
-    // Result validation
+    // Result
     private void validateResult(Result result, List<String> errors) {
         if (result == null) return;
 
@@ -125,7 +117,8 @@ public class XapiValidator {
         }
     }
 
-    // Attachments validation
+    // Attachments
+
     private void validateAttachments(List<Attachment> list, List<String> errors) {
         if (list == null) return;
 
@@ -138,11 +131,83 @@ public class XapiValidator {
                     prefix + "missing display (LanguageMap)", errors);
             require(() -> notEmpty(att.getContentType()), prefix + "missing contentType", errors);
             require(() -> att.getLength() != null && att.getLength() >= 0, prefix + "invalid length", errors);
-            require(() -> notEmpty(att.getSha2()) || notEmpty(att.getFileUrl()), prefix + "must have either sha2 or fileUrl", errors);
+            require(() -> notEmpty(att.getSha2()) || notEmpty(att.getFileUrl()),
+                    prefix + "must have either sha2 or fileUrl", errors);
+        }
+    }
+
+    // Context
+
+    private void validateContext(Context context, List<String> errors) {
+        if (context == null) return;
+
+        if (context.getInstructor() != null)
+            validateActor(context.getInstructor(), errors);
+
+        if (context.getTeam() != null)
+            validateActor(context.getTeam(), errors);
+
+        if (context.getContextActivities() != null)
+            validateContextActivities(context.getContextActivities(), errors);
+
+        if (context.getRevision() != null && context.getRevision().isBlank())
+            errors.add("context.revision cannot be blank");
+
+        if (context.getPlatform() != null && context.getPlatform().isBlank())
+            errors.add("context.platform cannot be blank");
+
+        if (context.getLanguage() != null && !context.getLanguage().isBlank()) {
+            if (!context.getLanguage().matches("^[a-zA-Z]{2,8}(-[a-zA-Z]{2,8})?$")) {
+                errors.add("context.language must be a valid language tag");
+            }
+        }
+
+        if (context.getExtensions() != null) {
+            for (String key : context.getExtensions().keySet()) {
+                if (!looksLikeIri(key)) {
+                    errors.add("context.extensions key is not valid IRI: " + key);
+                }
+            }
+        }
+    }
+    // ContextActivities
+
+    private void validateContextActivities(ContextActivities contextActivities, List<String> errors) {
+        if (contextActivities == null) return;
+
+        validateActivityList(contextActivities.getParent(), "contextActivities.parent", errors);
+        validateActivityList(contextActivities.getGrouping(), "contextActivities.grouping", errors);
+        validateActivityList(contextActivities.getCategory(), "contextActivities.category", errors);
+        validateActivityList(contextActivities.getOther(), "contextActivities.other", errors);
+    }
+
+    // Activity List Helper
+
+    private void validateActivityList(List<Activity> list, String field, List<String> errors) {
+        if (list == null) return;
+
+        for (int i = 0; i < list.size(); i++) {
+            Activity a = list.get(i);
+
+            if (a == null) {
+                errors.add(field + "[" + i + "] cannot be null");
+                continue;
+            }
+
+            if (!notEmpty(a.getId())) {
+                errors.add(field + "[" + i + "].id is missing");
+            }
+
+            if (a.getDefinition() != null) {
+                LanguageMap name = a.getDefinition().getName();
+                if (name != null && name.isEmpty())
+                    errors.add(field + "[" + i + "].definition.name cannot be empty");
+            }
         }
     }
 
     // Helpers
+
     private boolean notEmpty(String string) {
         return string != null && !string.isBlank();
     }
@@ -153,6 +218,7 @@ public class XapiValidator {
 
     public void validateOrThrow(XapiStatement st) {
         ValidationResult validationResult = validate(st);
-        if (!validationResult.isValid()) throw new IllegalArgumentException(String.join("; ", validationResult.getMessages()));
+        if (!validationResult.isValid())
+            throw new IllegalArgumentException(String.join("; ", validationResult.getMessages()));
     }
 }
