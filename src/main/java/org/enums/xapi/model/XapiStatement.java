@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.util.*;
 
 @Getter
+@Setter
 public class XapiStatement {
 
     @JsonProperty("id")

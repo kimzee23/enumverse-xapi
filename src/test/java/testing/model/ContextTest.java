@@ -68,16 +68,16 @@ class ContextTest {
     @Test
     @DisplayName("Context instructor and team can be null safely")
     void testActorNullSafety() {
-        Context ctx = new Context();
+        Context context = new Context();
 
-        assertNull(ctx.getInstructor());
-        assertNull(ctx.getTeam());
+        assertNull(context.getInstructor());
+        assertNull(context.getTeam());
 
-        ctx.setInstructor(new Actor("mailto:ade@mail.com", "Ade"));
-        ctx.setTeam(new Actor("mailto:ope@mail.com", "Ope"));
+        context.setInstructor(new Actor("mailto:ade@mail.com", "Ade"));
+        context.setTeam(new Actor("mailto:ope@mail.com", "Ope"));
 
-        assertNotNull(ctx.getInstructor());
-        assertNotNull(ctx.getTeam());
+        assertNotNull(context.getInstructor());
+        assertNotNull(context.getTeam());
     }
 
     @Test
