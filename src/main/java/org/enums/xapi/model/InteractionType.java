@@ -9,6 +9,7 @@ public enum InteractionType {
     fillIn,
     longFillIn,
     numeric,
+    performance,
     other
 
 

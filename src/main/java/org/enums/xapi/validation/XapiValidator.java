@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static org.enums.xapi.model.InteractionType.*;
+
 public class XapiValidator {
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -181,6 +183,7 @@ public class XapiValidator {
         validateActivityList(contextActivities.getOther(), "contextActivities.other", errors);
     }
 
+
     // Activity List Helper
 
     private void validateActivityList(List<Activity> list, String field, List<String> errors) {
@@ -202,6 +205,58 @@ public class XapiValidator {
                 LanguageMap name = a.getDefinition().getName();
                 if (name != null && name.isEmpty())
                     errors.add(field + "[" + count + "].definition.name cannot be empty");
+            }
+        }
+    }
+    // Interaction validation
+    private void validateInteractionDefinition(InteractionDefinition def, List<String> errors) {
+        if (def == null) return;
+
+        require(() -> def.getInteractionType() != null,
+                "interaction.interactionType is required", errors);
+
+        // Validate list fields per type
+        switch (def.getInteractionType()) {
+            case choice:
+            case sequencing:
+                validateInteractionList(def.getChoices(), "interaction.choices", errors);
+                break;
+
+            case likert:
+                validateInteractionList(def.getScale(), "interaction.scale", errors);
+                break;
+
+            case matching:
+                validateInteractionList(def.getSource(), "interaction.source", errors);
+                validateInteractionList(def.getTarget(), "interaction.target", errors);
+                break;
+
+            case performance:
+                validateInteractionList(def.getSteps(), "interaction.steps", errors);
+                break;
+
+            case numeric:
+            case fillIn:
+            case longFillIn:
+            case other:
+                // nothing required
+                break;
+        }
+    }
+
+    private void validateInteractionList(List<InteractionComponent> list, String field, List<String> errors) {
+        if (list == null) return;
+
+        for (int count = 0; count < list.size(); count++) {
+            InteractionComponent comp = list.get(count);
+
+            if (comp == null) {
+                errors.add(field + "[" + count + "] cannot be null");
+                continue;
+            }
+
+            if (comp.getId() == null || comp.getId().isBlank()) {
+                errors.add(field + "[" + count + "].id is required");
             }
         }
     }

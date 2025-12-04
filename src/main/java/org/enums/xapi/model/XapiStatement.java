@@ -41,6 +41,10 @@ public class XapiStatement {
     @JsonProperty("attachments")
     private List<Attachment> attachments = new ArrayList<>();
 
+    @JsonProperty("interactionDefinition")
+    private InteractionDefinition interactionDefinition;
+
+
     @Setter
     private JsonNode raw;
 

@@ -7,7 +7,7 @@
 
     <groupId>org.enums</groupId>
     <artifactId>enumverse-xapi</artifactId>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-beta</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
