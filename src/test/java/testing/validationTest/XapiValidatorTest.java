@@ -93,6 +93,8 @@ class XapiValidatorTest {
         assertTrue(result.getMessages().stream().anyMatch(m -> m.contains("verb.id is not a valid IRI")));
     }
 
+
+
     @DisplayName("Missing object ID")
     @Test
     void testMissingObjectId() {
@@ -107,6 +109,26 @@ class XapiValidatorTest {
         XapiValidator.ValidationResult result = validator.validate(st);
         assertFalse(result.isValid());
         assertTrue(result.getMessages().contains("Missing object.id"));
+    }
+
+    @DisplayName("Invalid Result Score")
+    @Test
+    void testInvalidResult() {
+        Actor actor = new Actor("mailto:test@mailinator.com", "User");
+        Verb verb = new Verb("https://example.com/verbs/test", "Test");
+        Activity act = new Activity("act1", "Test");
+
+        Result result = new Result();
+        Score score = new Score();
+        score.setScaled(2.0); // invalid, must be -1.0 to 1.0
+        result.setScore(score);
+
+        XapiStatement st = new XapiStatement(null, actor, verb, act, Instant.now());
+        st.setResult(result);
+
+        XapiValidator.ValidationResult res = validator.validate(st);
+        assertFalse(res.isValid());
+        assertTrue(res.getMessages().stream().anyMatch(m -> m.contains("result.score.scaled")));
     }
 
     @DisplayName("Context validation - missing instructor ID")
@@ -148,5 +170,50 @@ class XapiValidatorTest {
         XapiValidator.ValidationResult result = validator.validate(st);
         assertFalse(result.isValid());
         assertTrue(result.getMessages().stream().anyMatch(m -> m.contains("contextActivities.parent[0].id is missing")));
+    }
+
+    @DisplayName("Valid Context")
+    @Test
+    void testValidContext() {
+        Actor actor = new Actor("mailto:test@mailinator.com", "User");
+        Verb verb = new Verb("https://example.com/verbs/test", "Test");
+        Activity act = new Activity("act1", "Test");
+
+        Context context = new Context();
+        context.setRevision("rev1");
+        context.setPlatform("Web");
+        context.setLanguage("en-US");
+
+        ContextActivities ca = new ContextActivities();
+        ca.setParent(List.of(new Activity("parent1", "Parent")));
+        context.setContextActivities(ca);
+
+        XapiStatement st = new XapiStatement(null, actor, verb, act, Instant.now());
+        st.setContext(context);
+
+        XapiValidator.ValidationResult res = validator.validate(st);
+        assertTrue(res.isValid());
+    }
+
+    @DisplayName("Invalid Context")
+    @Test
+    void testInvalidContext() {
+        Actor actor = new Actor("mailto:test@mailinator.com", "User");
+        Verb verb = new Verb("https://example.com/verbs/test", "Test");
+        Activity act = new Activity("act1", "Test");
+
+        Context context = new Context();
+        context.setRevision(""); // invalid blank
+        context.setPlatform(""); // invalid blank
+        context.setLanguage("invalid-language"); // invalid pattern
+
+        XapiStatement xapiStatement = new XapiStatement(null, actor, verb, act, Instant.now());
+        xapiStatement.setContext(context);
+
+        XapiValidator.ValidationResult res = validator.validate(xapiStatement);
+        assertFalse(res.isValid());
+        assertTrue(res.getMessages().contains("context.revision cannot be blank"));
+        assertTrue(res.getMessages().contains("context.platform cannot be blank"));
+        assertFalse(res.getMessages().contains("context.language must be a valid language tag"));
     }
 }
