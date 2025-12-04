@@ -8,7 +8,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ContextModelTest {
+class ContextTest {
 
     @Test
     @DisplayName("Context should store and return all fields correctly")
