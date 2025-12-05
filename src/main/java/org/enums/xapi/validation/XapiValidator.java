@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static org.enums.xapi.model.InteractionType.*;
-
 public class XapiValidator {
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -100,10 +98,14 @@ public class XapiValidator {
 
         if (obj.getDefinition() != null) {
             LanguageMap name = obj.getDefinition().getName();
+
             require(() -> name == null || !name.isEmpty(),
                     "object.definition.name must not be empty when present", errors);
+
+            validateInteractionDefinition(obj.getDefinition().getInteraction(), errors);
         }
     }
+
 
     // Result
     private void validateResult(Result result, List<String> errors) {
@@ -212,10 +214,11 @@ public class XapiValidator {
     private void validateInteractionDefinition(InteractionDefinition def, List<String> errors) {
         if (def == null) return;
 
-        require(() -> def.getInteractionType() != null,
-                "interaction.interactionType is required", errors);
+        if (def.getInteractionType() == null) {
+            errors.add("interaction.interactionType is required");
+            return;
+        }
 
-        // Validate list fields per type
         switch (def.getInteractionType()) {
             case choice:
             case sequencing:
@@ -239,10 +242,10 @@ public class XapiValidator {
             case fillIn:
             case longFillIn:
             case other:
-                // nothing required
                 break;
         }
     }
+
 
     private void validateInteractionList(List<InteractionComponent> list, String field, List<String> errors) {
         if (list == null) return;

@@ -29,16 +29,27 @@ public class Activity {
         return definition.getName().getFirstValue();
     }
 
+    // Helper to set interactionDefinition
+    public void setInteractionDefinition(InteractionDefinition interaction) {
+        if (definition == null) definition = new Definition();
+        definition.setInteraction(interaction);
+    }
+
     @Getter
     @Setter
     public static class Definition {
         @JsonProperty("name")
         private LanguageMap name;
 
+        @Setter
+        @JsonProperty("interaction")
+        private InteractionDefinition interaction;
+
         public Definition() {}
 
         public Definition(LanguageMap name) {
             this.name = name;
         }
+
     }
 }
