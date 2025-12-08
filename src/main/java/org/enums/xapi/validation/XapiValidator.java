@@ -105,15 +105,15 @@ public class XapiValidator {
         if (obj == null) return;
 
         require(() -> notEmpty(obj.getId()), "Missing object.id", errors);
+        if (obj.getDefinition() != null &&
+                obj.getDefinition().getInteraction() != null) {
 
-        if (obj.getDefinition() != null) {
-            LanguageMap name = obj.getDefinition().getName();
-
-            require(() -> name == null || !name.isEmpty(),
-                    "object.definition.name must not be empty when present", errors);
-
-            validateInteractionDefinition(obj.getDefinition().getInteraction(), errors);
+            validateInteractionDefinition(
+                    obj.getDefinition().getInteraction(),
+                    errors
+            );
         }
+
     }
 
 
