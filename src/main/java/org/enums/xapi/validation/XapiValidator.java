@@ -52,7 +52,7 @@ public class XapiValidator {
         validateResult(st.getResult(), errors);
         validateAttachments(st.getAttachments(), errors);
 
-        // *** FIXED: context validation now triggered ***
+
         validateContext(st.getContext(), errors);
 
         return new ValidationResult(errors.isEmpty(), errors);
@@ -64,10 +64,20 @@ public class XapiValidator {
         if (actor == null) return;
 
         boolean hasMbox = notEmpty(actor.getMbox());
-        boolean identified = hasMbox;
+        boolean hasAccount = actor.getAccount() != null;
 
-        require(() -> identified, "Actor must have at least one identifier: mbox", errors);
+        boolean identified = hasMbox || hasAccount;
+
+        require(() -> identified,
+                "Actor must have at least one identifier: mbox or account",
+                errors);
+
+        // If account exists, validate it
+        if (hasAccount) {
+            validateAccount(actor.getAccount(), errors);
+        }
     }
+
 
     // Account
     private void validateAccount(Account account, List<String> errors) {
@@ -139,6 +149,9 @@ public class XapiValidator {
                     prefix + "must have either sha2 or fileUrl", errors);
         }
     }
+    private boolean isLanguageTag(String lang) {
+        return lang.matches("^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{2,8})*$");
+    }
 
     // Context
 
@@ -160,9 +173,10 @@ public class XapiValidator {
         if (context.getPlatform() != null && context.getPlatform().isBlank())
             errors.add("context.platform cannot be blank");
 
-        if (context.getLanguage() != null && !context.getLanguage().isBlank()) {
-            if (!context.getLanguage().matches("^[a-zA-Z]{2,8}(-[a-zA-Z]{2,8})?$")) {
-                errors.add("context.language must be a valid language tag");
+        if (context.getLanguage() != null) {
+            String lang = context.getLanguage();
+            if (!lang.isBlank() && !isLanguageTag(lang)) {
+                errors.add("context.language must be a valid BCP-47 language tag");
             }
         }
 
@@ -270,9 +284,11 @@ public class XapiValidator {
         return string != null && !string.isBlank();
     }
 
-    private boolean looksLikeIri(String string) {
-        return string != null && (string.startsWith("http://") || string.startsWith("https://") || string.contains(":"));
+    private boolean looksLikeIri(String s) {
+        return s != null &&
+                (s.startsWith("http://") || s.startsWith("https://"));
     }
+
 
     public void validateOrThrow(XapiStatement st) {
         ValidationResult validationResult = validate(st);

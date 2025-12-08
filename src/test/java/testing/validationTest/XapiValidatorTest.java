@@ -63,7 +63,7 @@ class XapiValidatorTest {
 
         XapiValidator.ValidationResult result = validator.validate(st);
         assertFalse(result.isValid());
-        assertTrue(result.getMessages().contains("Actor must have at least one identifier: mbox"));
+        assertTrue(result.getMessages().contains("Actor must have at least one identifier: mbox or account"));
     }
 
     @DisplayName("Missing verb")
@@ -147,7 +147,7 @@ class XapiValidatorTest {
 
         XapiValidator.ValidationResult result = validator.validate(st);
         assertFalse(result.isValid());
-        assertTrue(result.getMessages().contains("Actor must have at least one identifier: mbox"));
+        assertTrue(result.getMessages().contains("Actor must have at least one identifier: mbox or account"));
     }
 
     @DisplayName("ContextActivities validation - missing activity ID")
