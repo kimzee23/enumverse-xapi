@@ -4,20 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+
 @Setter
+@Getter
 @AllArgsConstructor
 public class XapiClientConfig {
 
-    private String endpoint;
-    private String username;
-    private String password;
-    private int timeoutSeconds;
+    private final String endpoint;
+    private final String username;
+    private final String password;
+    private final int timeoutSeconds;
 
-    /** Build Authorization header */
-    public String getBasicAuthHeader() {
-        String raw = username + ":" + password;
-        return "Basic " + java.util.Base64.getEncoder()
-                .encodeToString(raw.getBytes());
-    }
 }
