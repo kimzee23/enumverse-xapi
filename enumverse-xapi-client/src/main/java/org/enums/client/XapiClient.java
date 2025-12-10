@@ -23,7 +23,8 @@ public class XapiClient {
 
     public void sendStatement(XapiStatement statement) {
         try {
-            String json = statement.toJson();  // you must implement this
+            String json = StatementSerializer.toJson(statement);
+            // you must implement this
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(endpoint + "/statements"))
@@ -34,8 +35,8 @@ public class XapiClient {
 
             httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        } catch (Exception e) {
-            throw new XapiClientException("Failed to send XAPI statement", e);
+        } catch (Exception error) {
+            throw new XapiClientException("Failed to send XAPI statement", error);
         }
     }
 
