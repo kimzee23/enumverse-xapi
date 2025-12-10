@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class VerbTest {
+class VerbTest {
 
     @DisplayName("Verb should store id and language map correctly")
     @Test
