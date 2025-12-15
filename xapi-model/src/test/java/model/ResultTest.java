@@ -1,7 +1,7 @@
 package model;
 
-import org.enums.xapi.model.Result;
-import org.enums.xapi.model.Score;
+import org.enums.model.Result;
+import org.enums.model.Score;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

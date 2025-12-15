@@ -4,7 +4,6 @@ import org.enums.model.Activity;
 import org.enums.model.Actor;
 import org.enums.model.Context;
 import org.enums.model.ContextActivities;
-import org.enums.xapi.model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

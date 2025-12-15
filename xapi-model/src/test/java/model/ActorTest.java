@@ -1,9 +1,12 @@
 package model;
 
-import org.enums.xapi.model.Actor;
-import org.enums.xapi.model.Account;
+import org.enums.model.Account;
+import org.enums.model.Actor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ActorTest {
 
@@ -19,7 +22,6 @@ public class ActorTest {
     @DisplayName("Actor with account")
     @Test
     public void testActorWithAccount() {
-        // Use the standalone Account class
         Account acc = new Account();
         acc.setHomePage("https://sit.com");
         acc.setName("userName");
@@ -31,7 +33,6 @@ public class ActorTest {
         assertEquals("userName", actor.getAccount().getName());
         assertEquals("https://sit.com", actor.getAccount().getHomePage());
 
-        // Extra checks on Account itself
         assertEquals("userName", acc.getName());
         assertEquals("https://sit.com", acc.getHomePage());
     }

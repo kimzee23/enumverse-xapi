@@ -1,8 +1,10 @@
 package model;
 
-import org.enums.xapi.model.Score;
+import org.enums.model.Score;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ScoreTest {
 

@@ -1,11 +1,14 @@
 package model;
 
-import org.enums.xapi.model.Agent;
-import org.enums.xapi.model.Account;
+import org.enums.model.Account;
+import org.enums.model.Agent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AgentTest {
 
@@ -33,7 +36,6 @@ public class AgentTest {
         assertEquals("userName", agent.getAccount().getName());
         assertEquals("https://sit.com", agent.getAccount().getHomePage());
 
-        // Extra checks on Account
         assertEquals("userName", acc.getName());
         assertEquals("https://sit.com", acc.getHomePage());
     }

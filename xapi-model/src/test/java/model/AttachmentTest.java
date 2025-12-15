@@ -1,9 +1,11 @@
 package model;
 
-import org.enums.xapi.model.Attachment;
-import org.enums.xapi.model.LanguageMap;
+import org.enums.model.Attachment;
+import org.enums.model.LanguageMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AttachmentTest {
 

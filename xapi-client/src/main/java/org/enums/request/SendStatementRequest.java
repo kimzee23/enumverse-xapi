@@ -1,7 +1,7 @@
 package org.enums.request;
 
 import lombok.Data;
-import org.enums.xapi.model.XapiStatement;
+import org.enums.model.XapiStatement;
 
 @Data
 public class SendStatementRequest {

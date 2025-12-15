@@ -1,9 +1,11 @@
 package model;
 
-import org.enums.xapi.model.LanguageMap;
-import org.enums.xapi.model.Verb;
+import org.enums.model.LanguageMap;
+import org.enums.model.Verb;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VerbTest {
 
