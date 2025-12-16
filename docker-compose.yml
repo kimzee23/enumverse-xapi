@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # 1. The Database
+  mongodb:
+    image: mongo:7.0
+    container_name: enumverse-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: enumverse
+    volumes:
+      - mongo-data:/data/db
+
+  # 2. Your LRS Service
+  xapi-service:
+    build: ./xapi-service
+    container_name: enumverse-lrs
+    ports:
+      - "8081:8081"
+    environment:
+      SERVER_PORT: 8081
+      # MongoDB (enhanced but compatible)
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:password@mongodb:27017/enumverse?authSource=admin
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-data:
