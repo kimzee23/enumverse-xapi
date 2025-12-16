@@ -1,5 +1,6 @@
 package validation;
 
+import org.enums.enums.InteractionType;
 import org.enums.model.*;
 import org.enums.validation.XapiValidator;
 import org.junit.jupiter.api.Test;

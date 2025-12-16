@@ -120,7 +120,7 @@ class XapiValidatorTest {
 
         Result result = new Result();
         Score score = new Score();
-        score.setScaled(2.0); // invalid, must be -1.0 to 1.0
+        score.setScaled(2.0);
         result.setScore(score);
 
         XapiStatement st = new XapiStatement(null, actor, verb, act, Instant.now());

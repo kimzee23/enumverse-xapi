@@ -3,6 +3,7 @@ package org.enums.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.enums.enums.InteractionType;
 
 import java.util.List;
 @Getter

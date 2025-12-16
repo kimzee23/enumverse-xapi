@@ -15,6 +15,7 @@ public class XapiValidator {
 
     public XapiValidator() {}
 
+
     @Getter
     public static class ValidationResult {
         private final boolean valid;

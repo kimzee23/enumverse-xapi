@@ -1,4 +1,4 @@
-package org.enums.model;
+package org.enums.enums;
 
 public enum InteractionType {
     choice,

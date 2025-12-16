@@ -5,7 +5,6 @@ import org.enums.model.XapiStatement;
 
 import java.net.URI;
 
-//import java.net.http.HttpClient;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -28,14 +27,12 @@ public class XapiClient {
         this.http = httpClient;
     }
 
-    // BASIC AUTH
     protected String basicAuthHeader() {
         String raw = config.getUsername() + ":" + config.getPassword();
         return "Basic " +
                 Base64.getEncoder().encodeToString(raw.getBytes(StandardCharsets.UTF_8));
     }
 
-    // SEND SINGLE STATEMENT
     public XapiResponse sendStatement(XapiStatement statement) throws Exception {
 
         if (statement == null) {
@@ -47,7 +44,6 @@ public class XapiClient {
         return getXapiResponse(json);
     }
 
-    // SEND MULTIPLE STATEMENTS (BATCH)
 
     public XapiResponse sendStatements(List<XapiStatement> list) throws Exception {
 
@@ -81,7 +77,6 @@ public class XapiClient {
     }
 
 
-    // READER (GET Statements) ---
     public XapiResponse getStatements() throws Exception {
         return getStatements(null); // Get all (default limit)
     }
