@@ -1,6 +1,7 @@
 package org.enums.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;

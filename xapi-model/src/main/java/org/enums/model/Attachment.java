@@ -2,10 +2,12 @@ package org.enums.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Attachment {
 
     @JsonProperty("usageType")//IRI
@@ -37,15 +39,15 @@ public class Attachment {
                                 String sha2,
                                 String fileUrl) {
 
-        Attachment a = new Attachment();
-        a.setUsageType(usageType);
-        a.setDisplay(LanguageMap.of("en-US", name));
-        a.setDescription(LanguageMap.of("en-US", description));
-        a.setContentType(contentType);
-        a.setLength(length);
-        a.setSha2(sha2);
-        a.setFileUrl(fileUrl);
+        Attachment attachment = new Attachment();
+        attachment.setUsageType(usageType);
+        attachment.setDisplay(LanguageMap.of("en-US", name));
+        attachment.setDescription(LanguageMap.of("en-US", description));
+        attachment.setContentType(contentType);
+        attachment.setLength(length);
+        attachment.setSha2(sha2);
+        attachment.setFileUrl(fileUrl);
 
-        return a;
+        return attachment;
     }
 }

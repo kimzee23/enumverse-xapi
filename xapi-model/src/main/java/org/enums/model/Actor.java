@@ -2,10 +2,12 @@ package org.enums.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class Actor {
     @JsonProperty("objectType")
     private String objectType; // Agent / Group
@@ -17,8 +19,6 @@ public class Actor {
 
     @JsonProperty("account")
     private Account account;
-
-    public Actor() {}
 
     public Actor(String mbox, String name) {
         this.objectType = "Agent";

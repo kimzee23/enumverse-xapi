@@ -2,10 +2,12 @@ package org.enums.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Activity {
 
     @JsonProperty("objectType")
@@ -16,8 +18,6 @@ public class Activity {
 
     @JsonProperty("definition")
     private Definition definition;
-
-    public Activity() {}
 
     public Activity(String id, String name) {
         this.id = id;

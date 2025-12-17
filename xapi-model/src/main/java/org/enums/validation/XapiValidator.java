@@ -3,17 +3,20 @@ package org.enums.validation;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.enums.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+
+//@Component
+@NoArgsConstructor
 public class XapiValidator {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public XapiValidator() {}
 
 
     @Getter
@@ -73,7 +76,6 @@ public class XapiValidator {
                 "Actor must have at least one identifier: mbox or account",
                 errors);
 
-        // If account exists, validate it
         if (hasAccount) {
             validateAccount(actor.getAccount(), errors);
         }
@@ -118,7 +120,6 @@ public class XapiValidator {
     }
 
 
-    // Result
     private void validateResult(Result result, List<String> errors) {
         if (result == null) return;
 
@@ -132,7 +133,6 @@ public class XapiValidator {
         }
     }
 
-    // Attachments
 
     private void validateAttachments(List<Attachment> list, List<String> errors) {
         if (list == null) return;
@@ -150,11 +150,12 @@ public class XapiValidator {
                     prefix + "must have either sha2 or fileUrl", errors);
         }
     }
+
+
     private boolean isLanguageTag(String lang) {
         return lang.matches("^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{2,8})*$");
     }
 
-    // Context
 
     private void validateContext(Context context, List<String> errors) {
         if (context == null) return;
@@ -189,7 +190,6 @@ public class XapiValidator {
             }
         }
     }
-    // ContextActivities
 
     private void validateContextActivities(ContextActivities contextActivities, List<String> errors) {
         if (contextActivities == null) return;
@@ -200,8 +200,6 @@ public class XapiValidator {
         validateActivityList(contextActivities.getOther(), "contextActivities.other", errors);
     }
 
-
-    // Activity List Helper
 
     private void validateActivityList(List<Activity> list, String field, List<String> errors) {
         if (list == null) return;
@@ -225,32 +223,32 @@ public class XapiValidator {
             }
         }
     }
-    // Interaction validation
-    private void validateInteractionDefinition(InteractionDefinition def, List<String> errors) {
-        if (def == null) return;
 
-        if (def.getInteractionType() == null) {
+    private void validateInteractionDefinition(InteractionDefinition interactionDefinition, List<String> errors) {
+        if (interactionDefinition == null) return;
+
+        if (interactionDefinition.getInteractionType() == null) {
             errors.add("interaction.interactionType is required");
             return;
         }
 
-        switch (def.getInteractionType()) {
+        switch (interactionDefinition.getInteractionType()) {
             case choice:
             case sequencing:
-                validateInteractionList(def.getChoices(), "interaction.choices", errors);
+                validateInteractionList(interactionDefinition.getChoices(), "interaction.choices", errors);
                 break;
 
             case likert:
-                validateInteractionList(def.getScale(), "interaction.scale", errors);
+                validateInteractionList(interactionDefinition.getScale(), "interaction.scale", errors);
                 break;
 
             case matching:
-                validateInteractionList(def.getSource(), "interaction.source", errors);
-                validateInteractionList(def.getTarget(), "interaction.target", errors);
+                validateInteractionList(interactionDefinition.getSource(), "interaction.source", errors);
+                validateInteractionList(interactionDefinition.getTarget(), "interaction.target", errors);
                 break;
 
             case performance:
-                validateInteractionList(def.getSteps(), "interaction.steps", errors);
+                validateInteractionList(interactionDefinition.getSteps(), "interaction.steps", errors);
                 break;
 
             case numeric:

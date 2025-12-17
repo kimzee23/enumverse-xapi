@@ -1,10 +1,12 @@
 package org.enums.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class InteractionComponent {
     private String Id;
     private LanguageMap LanguageMap;

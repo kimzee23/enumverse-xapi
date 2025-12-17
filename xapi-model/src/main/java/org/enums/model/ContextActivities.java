@@ -2,22 +2,22 @@ package org.enums.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ContextActivities {
 
-    // parent activities, e.g., course
     @JsonProperty("parent")
     private List<Activity> parent;
 
     @JsonProperty("grouping")
-    private List<Activity> grouping;     // group of related activities
+    private List<Activity> grouping;
 
-    // category or type of activity
     @JsonProperty("category")
     private List<Activity> category;
 

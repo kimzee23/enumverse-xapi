@@ -3,12 +3,15 @@
     <groupId>org.enums</groupId>
     <artifactId>enumverse-xapi</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging> <modules>
-    <module>xapi-model</module>
-    <module>xapi-client</module>
-    <module>xapi-service</module>
-    <module>xapi-demo</module>
-</modules>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>xapi-model</module>
+        <module>xapi-client</module>
+        <module>xapi-service</module>
+        <module>xapi-demo</module>
+    </modules>
 
     <properties>
         <java.version>17</java.version>
@@ -17,20 +20,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>enumverse-github</id>
-            <url>https://maven.pkg.github.com/kimzee23/enumverse-xapi</url>
-        </repository>
-    </repositories>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>enumverse-github</id>-->
+<!--            <url>https://maven.pkg.github.com/kimzee23/enumverse-xapi</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
-    <distributionManagement>
-        <repository>
-            <id>enumverse-github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/kimzee23/enumverse-xapi</url>
-        </repository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>enumverse-github</id>-->
+<!--            <name>GitHub Packages</name>-->
+<!--            <url>https://maven.pkg.github.com/kimzee23/enumverse-xapi</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
 
     <build>
         <plugins>
@@ -43,4 +46,17 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>3.2.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 </project>

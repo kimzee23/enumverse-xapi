@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/xapi/statements")
+//@RequestMapping("/xapi/statements")
+@RequestMapping("/xapi")
 @CrossOrigin(origins = "*")
 public class LrsController {
 

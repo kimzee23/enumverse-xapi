@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -12,6 +13,7 @@ import java.util.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class XapiStatement {
 
     @JsonProperty("id")
@@ -49,8 +51,6 @@ public class XapiStatement {
     private JsonNode raw;
 
     private final Map<String, Object> other = new HashMap<>();
-
-    public XapiStatement() {}
 
     public XapiStatement(String id, Actor actor, Verb verb,
                          Activity object, Instant timestamp) {

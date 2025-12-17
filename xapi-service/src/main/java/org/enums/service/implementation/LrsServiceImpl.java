@@ -17,9 +17,9 @@ public class LrsServiceImpl implements LrsService {
     private final StatementRepository repository;
     private final XapiValidator validator;
 
-    public LrsServiceImpl(StatementRepository repository) {
+    public LrsServiceImpl(StatementRepository repository, XapiValidator validator) {
         this.repository = repository;
-        this.validator = new XapiValidator();
+        this.validator = validator;
     }
 
 
@@ -42,4 +42,6 @@ public class LrsServiceImpl implements LrsService {
     public List<XapiStatement> getStatements() {
         return repository.findAll();
     }
+
+
 }
