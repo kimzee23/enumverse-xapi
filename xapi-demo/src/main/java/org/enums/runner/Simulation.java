@@ -1,17 +1,17 @@
 package org.enums.runner;
 
-
 import org.enums.client.XapiClient;
 import org.enums.client.XapiResponse;
 import org.enums.model.Actor;
 import org.enums.model.Activity;
 import org.enums.model.Verb;
 import org.enums.model.XapiStatement;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Simulation implements CommandLineRunner {
+public class Simulation {
 
     private final XapiClient xapiClient;
 
@@ -19,21 +19,26 @@ public class Simulation implements CommandLineRunner {
         this.xapiClient = xapiClient;
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-        System.out.println("--- SIMULATION STARTING ---");
+    @EventListener(ApplicationReadyEvent.class)
+    public void runSimulation() {
+        System.out.println("--- SIMULATION STARTING (APPLICATION READY) ---");
 
-        XapiStatement statement = getXapiStatement();
+        try {
+            XapiStatement statement = getXapiStatement();
 
-        System.out.println("Sending Statement to LRS...");
-        XapiResponse response = xapiClient.sendStatement(statement);
+            System.out.println("Sending Statement to LRS...");
+            XapiResponse response = xapiClient.sendStatement(statement);
 
-        if (response.isSuccess()) {
-            System.out.println("SUCCESS! Statement stored in LRS.");
-            System.out.println("Status: " + response.getStatus());
-        } else {
-            System.out.println("FAILED. LRS rejected it.");
-            System.out.println("Reason: " + response.getBody());
+            if (response.isSuccess()) {
+                System.out.println("SUCCESS! Statement stored in LRS.");
+                System.out.println("Status: " + response.getStatus());
+            } else {
+                System.out.println("FAILED. LRS rejected it.");
+                System.out.println("Reason: " + response.getBody());
+            }
+        } catch (Exception e) {
+            System.out.println("Simulation failed — LRS not reachable");
+            e.printStackTrace();
         }
     }
 
@@ -63,7 +68,11 @@ public class Simulation implements CommandLineRunner {
         return activity;
     }
 
-    private static XapiStatement getXapiStatement(Actor actor, Verb verb, Activity activity) {
+    private static XapiStatement getXapiStatement(
+            Actor actor,
+            Verb verb,
+            Activity activity
+    ) {
         XapiStatement statement = new XapiStatement();
         statement.setActor(actor);
         statement.setVerb(verb);

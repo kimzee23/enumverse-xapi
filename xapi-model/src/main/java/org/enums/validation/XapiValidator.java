@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 
-//@Component
 @NoArgsConstructor
 public class XapiValidator {
 
