@@ -2,25 +2,18 @@ package org.enums.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.NoArgsConstructor;
-
 import java.util.HashMap;
 import java.util.Map;
 
+@NoArgsConstructor
 public class LanguageMap extends HashMap<String, Object> {
 
-    public LanguageMap() {
-        super();
-    }
 
     @JsonCreator
     public LanguageMap(Map<String, String> maps) {
         super(maps);
     }
 
-    /**
-     * Return first value (useful when you don't care about language).
-     * @JsonIgnore is implied here because Jackson serializes Maps by entries, not getters.
-     */
     public String getFirstValue() {
         if (this.isEmpty()) return null;
         return (String) this.values().iterator().next();
