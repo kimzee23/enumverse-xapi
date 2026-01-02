@@ -1,6 +1,7 @@
 package org.enums.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Score {
     @JsonProperty("scaled")
     private Double scaled;
@@ -22,10 +24,10 @@ public class Score {
     private Double max;
 
 
-    public Score(Double scaled, Double raw, Double min, Double max) {
-        this.scaled = scaled;
-        this.raw = raw;
-        this.min = min;
-        this.max = max;
-    }
+//    public Score(Double scaled, Double raw, Double min, Double max) {
+//        this.scaled = scaled;
+//        this.raw = raw;
+//        this.min = min;
+//        this.max = max;
+//    }
 }

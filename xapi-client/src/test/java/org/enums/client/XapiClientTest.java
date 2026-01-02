@@ -1,7 +1,7 @@
-package org.enums.service;
+package org.enums.client;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LrsServiceTest {
+class XapiClientTest {
 
 }

@@ -1,12 +1,12 @@
 package org.enums.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Verb {
 
     @JsonProperty("id")
@@ -18,12 +18,6 @@ public class Verb {
     public Verb(String id, String displayString) {
 
         this(id, LanguageMap.of("en-US", displayString));
-    }
-
-    @JsonCreator
-    public Verb(@JsonProperty("id") String id, @JsonProperty("display") LanguageMap display) {
-        this.id = id;
-        this.display = display;
     }
 
     public String getDisplay(String lang) {

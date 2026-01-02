@@ -1,6 +1,7 @@
 package org.enums.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ContextActivities {
 
     @JsonProperty("parent")
@@ -22,5 +24,5 @@ public class ContextActivities {
     private List<Activity> category;
 
     @JsonProperty("other")
-    private List<Activity> other;  // any other related activities
+    private List<Activity> other;
 }

@@ -1,6 +1,7 @@
 package org.enums.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,9 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Attachment {
 
-    @JsonProperty("usageType")//IRI
+    @JsonProperty("usageType")
     private String usageType;
 
     @JsonProperty("display")
