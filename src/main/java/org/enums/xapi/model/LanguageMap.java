@@ -1,27 +1,26 @@
 package org.enums.xapi.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class LanguageMap extends HashMap<String, Object> {
+
     public LanguageMap() {
         super();
     }
 
     @JsonCreator
-    public LanguageMap(java.util.Map<String, String> maps) {
+    public LanguageMap(Map<String, String> maps) {
         super(maps);
-    }
-    @JsonValue
-    public java.util.Map<String, Object> toMap() {
-        return this;
     }
 
     /**
      * Return first value (useful when you don't care about language).
      */
+    @JsonIgnore
     public String getFirstValue() {
         if (this.isEmpty()) return null;
         return (String) this.values().iterator().next();
